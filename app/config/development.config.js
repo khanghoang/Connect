@@ -7,7 +7,7 @@ module.exports = function (ROOT_PATH) {
       hostname: 'localhost',
     },
     database: {
-      url: 'mongodb://localhost/express4_bootstrap_starter'
+      url: 'mongodb://localhost/connect'
     },
     BaseApiURL : 'http://localhost:3001/api/',
     root     : ROOT_PATH,
@@ -23,8 +23,8 @@ module.exports = function (ROOT_PATH) {
     },
     facebookAuth: true,
     facebook: {
-      clientID: process.env.FACEBOOK_ID || '533758460065977',
-      clientSecret: process.env.FACEBOOK_SECRET || '42fb6d9a8607cc549d5ca194c7422037',
+      clientID: process.env.FACEBOOK_ID || '425525177629732',
+      clientSecret: process.env.FACEBOOK_SECRET || 'ef80ce912ae9f7ab3e1c5bef5add86e5',
       callbackURL: '/auth/facebook/callback',
       passReqToCallback: true
     },

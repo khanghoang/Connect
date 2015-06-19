@@ -28,13 +28,15 @@
   },
   "dependencies": {
     "async": "^0.9.0",
+    "aws-sdk": "^2.1.34",
+    "babyparse": "^0.4.3",
     "body-parser": "^1.10.1",
     "cheerio": "^0.18.0",
     "compression": "^1.3.0",
     "connect-mongo": "^0.5.3",
     "cookie-parser": "latest",
     "ejs": "^2.0.8",
-    "email-templates": "^1.1.2",
+    "email-templates": "https://registry.npmjs.org/email-templates/-/email-templates-1.1.2.tgz",
     "errorhandler": "^1.3.2",
     "express": "^4.10.*",
     "express-enforces-ssl": "^1.1.0",
@@ -46,19 +48,21 @@
     "lusca": "^1.0.2",
     "method-override": "^2.3.1",
     "mkdirp": "^0.5.0",
-    "moment": "^2.9.0",
+    "moment": "https://registry.npmjs.org/moment/-/moment-2.9.0.tgz",
     "mongoose": "3.8.21",
     "mongoose-error-helper": "0.0.2",
     "mongoose-slug": "^1.3.1",
     "mongoose-timestamp": "^0.3.0",
     "mongoose-types": "^1.0.3",
     "morgan": "^1.5.*",
-    "multer": "0.1.6",
+    "multer": "https://registry.npmjs.org/multer/-/multer-0.1.6.tgz",
     "multipart": "^0.1.5",
     "node-uuid": "^1.4.2",
     "nodemailer": "^1.3.0",
+    "oauth2-server": "^2.4.0",
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",
+    "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.2",
     "phantom-render-stream": "^1.3.0",
@@ -70,7 +74,7 @@
     "utility": "^1.2.1",
     "validator": "3.27.0",
     "view-helpers": "^0.1.5",
-    "winston": "^0.8.3"
+    "winston": "https://registry.npmjs.org/winston/-/winston-0.8.3.tgz"
   },
   "devDependencies": {
     "chai": "^1.10.0",
@@ -92,5 +96,9 @@
     "mocha": "^2.1.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"
+  },
+  "engines": {
+    "node": "0.10.36",
+    "npm": "1.4.28"
   }
 }
