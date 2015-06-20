@@ -1,5 +1,6 @@
 extends ../layouts/default
 
+
 block form
   .form-signin
     if message != ""
@@ -25,7 +26,7 @@ block form
           | &nbsp; Sign in with Twitter
 
       .row.m-b
-        a.btn.btn-lg.btn-facebook(href="/auth/facebook" target="_top")
+        a.btn.btn-lg.btn-facebook(href="/auth/facebook?callback=" target="_top")
           i.fa.fa-fw.fa-facebook
           | &nbsp; Sign in with Facebook
 
