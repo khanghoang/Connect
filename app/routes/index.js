@@ -48,10 +48,31 @@ Route
     failureRedirect: '/login' }), function(req, res) {
     res.redirect(req.session.returnTo || '/');
   })
-  .get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }))
-  .get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
-    res.redirect(req.session.returnTo || '/');
+  .get('/auth/facebook', function(req, res, next) {
+    console.log(req.query.parent_url);
+    var encodeBase64url = new Buffer(req.query.parent_url).toString('base64');
+    req.session = req.session || {};
+    req.session.returnTo = req.query.parent_url;
+    passport.authenticate('facebook', { 
+      callbackURL: '/auth/facebook/callback',
+      scope: ['email', 'user_location'] 
+    })(req, res, next);
   })
+
+  .get('/auth/facebook/callback', function(req, res, next) {
+    passport.authenticate('facebook', { 
+      failureRedirect: '/login',
+      successRedirect: '/redirect'
+    })(req, res, next)
+  })
+
+  .get("/redirect", function(req, res, next) {
+    if(!req.session.returnTo) {
+      return res.render('404', { url: req.url, error: '404 Not found' });
+    }
+    res.redirect(req.session.returnTo);
+  })
+
   .get('/trick/create', Auth.requiresLogin, trickController.create)
   .get('/:username/tricks', Auth.requiresLogin, trickController.myTrick)
   .get('/:username', userController.user_profile)
