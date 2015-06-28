@@ -20,6 +20,12 @@ var pkg              = require('../../package.json');
 var flash            = require('express-flash');
 var routes           = require('../routes');
 var _                = require('lodash');
+var fs               = require('fs');
+var config           = require('./config');
+// var uploadController = require('../controllers/upload_csv_file');
+var oauthServer      = require('oauth2-server');
+GLOBAL.AWS                   = require('aws-sdk');
+var PushNotificationController = require(config.root + '/controllers/PushNotificationController');
 
 module.exports = function (app, express, passport) {
 
@@ -30,15 +36,29 @@ module.exports = function (app, express, passport) {
     next();
   };
 
+  AWS.config.update({
+    accessKeyId: app.config.AWS_KEY,
+    secretAccessKey: app.config.AWS_SECRET
+  });
+
+  PushNotificationController.initialize();
+
   // settings
   app.set('env', env);
   app.set('port', app.config.server.port || 3000);
   app.set('views', path.join(__dirname, '../../app/views'));
   app.set('view engine', 'jade');
 
+  app.use(compression({
+    // filter: function (req, res) { return /json|text|javascript|css/.test(res.getHeader('Content-Type')) },
+    level: 9
+  }))
+
   app.enable('trust proxy');
 
   app.disable('x-powered-by');
+
+  require('../lib/helpers')(app);
 
   // Express use middlewares
   app.use(favicon(path.join(__dirname, '../../public/favicon.png')));
@@ -54,9 +74,18 @@ module.exports = function (app, express, passport) {
 
   app.use(bodyParser.urlencoded({extended: true}))
   app.use(bodyParser.json())
-  app.use(multer())
   app.use(expressValidator())
   app.use(methodOverride())
+
+  // oauth 2
+  app.oauth = oauthServer({
+    model: require('../oauth/models'),
+    grants: ['password'],
+    debug: true
+  })
+
+  app.all('/oauth/token', app.oauth.grant())
+  app.use(app.oauth.errorHandler())
 
   app.use(cookieParser('notagoodsecretnoreallydontusethisone'));
   app.use(session({
@@ -76,23 +105,23 @@ module.exports = function (app, express, passport) {
   // use passport session
   app.use(passport.initialize());
   app.use(passport.session({
-    maxAge: new Date(Date.now() + 3600000)
+    maxAge: new Date(Date.now() + 36000000000000)
   }));
   app.use(flash());
 
-  var csrfExclude = ['/api/trick/import'];
-  app.use(function(req, res, next) {
-
-    var path = req.path.split('/')[1];
-    if (/api/i.test(path)) {
-      return next();
-    } else {
-
-      if (_.contains(csrfExclude, req.path)) return next();
-
-      csrf(req, res, next);
-    }
-  });
+  // var csrfExclude = ['/api/trick/import/', '/login/facebookLogin', '/login/googlePlusLogin', "/api/getSplashScreen", "/SplashScreens/create", "/QuizQuestions/create", "/QuizQuestions"];
+  // app.use(function(req, res, next) {
+  //
+  //   var path = req.path.split('/')[1];
+  //   if (/api/i.test(path)) {
+  //     return next();
+  //   } else {
+  //
+  //     if (_.contains(csrfExclude, req.path)) return next();
+  //
+  //     csrf(req, res, next);
+  //   }
+  // });
 
   app.use(views_helpers(pkg.name));
   app.use(function (req, res, next) {
@@ -106,18 +135,20 @@ module.exports = function (app, express, passport) {
   });
   app.use(express.static(path.normalize(__dirname + '/../../public')));
 
+  app.use('/game', express.static(path.normalize(__dirname + '/../../game')));
+
   /** ROUTES Apps */
   app.use(routes);
 
   // will print stacktrace
-  if (app.get('env') === 'development') {
-    app.use(responseTime());
-  } else {
-    app.use(compression({
-      filter: function (req, res) { return /json|text|javascript|css/.test(res.getHeader('Content-Type')) },
-      level: 9
-    }))
-  }
+  // if (app.get('env') === 'development') {
+  //   app.use(responseTime());
+  // } else {
+  //   app.use(compression({
+  //     // filter: function (req, res) { return /json|text|javascript|css/.test(res.getHeader('Content-Type')) },
+  //     // level: 9
+  //   }))
+  // }
 
   app.use(function handleNotFound(req, res, next){
     res.status(404);

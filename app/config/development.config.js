@@ -2,6 +2,9 @@
 
 module.exports = function (ROOT_PATH) {
   var config = {
+    AWS_KEY: "AKIAIE6SUIZCTS3DO4PA",
+    AWS_SECRET: "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",
+    expiredTime: false,
     server: {
       port: 3001,
       hostname: 'localhost',
@@ -23,8 +26,8 @@ module.exports = function (ROOT_PATH) {
     },
     facebookAuth: true,
     facebook: {
-      clientID: process.env.FACEBOOK_ID || '425525177629732',
-      clientSecret: process.env.FACEBOOK_SECRET || 'ef80ce912ae9f7ab3e1c5bef5add86e5',
+      clientID: process.env.FACEBOOK_ID || '441150779394710',
+      clientSecret: process.env.FACEBOOK_SECRET || '25d0fc32ea8db7adb9b06b8178ad72c3',
       callbackURL: '/auth/facebook/callback',
       passReqToCallback: true
     },

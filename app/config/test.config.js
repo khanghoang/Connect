@@ -1,5 +1,6 @@
 module.exports = function (ROOT_PATH) {
   var config = {
+    expiredTime: false,
     server: {
       port: 3001,
       hostname: process.env.HOSTNAME || '127.0.0.1',

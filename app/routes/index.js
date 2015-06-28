@@ -5,26 +5,34 @@ var passport = require('passport');
 var lodash = require('lodash')
 var Auth = require(config.root + '/middleware/authorization');
 var fs = require('fs');
+var utils = require(config.root + '/helper/utils');
 
 var userController = require(config.root + '/controllers/users');
+var NotificationController = require(config.root + '/controllers/PushNotificationController');
 var trickController = require(config.root + '/controllers/tricks');
 
 var API = {}
-API.tricks = require(config.root + '/controllers/API/tricks');
-API.Uploader = require(config.root + '/controllers/API/uploader');
 API.Users = require(config.root + '/controllers/API/users');
 
-
 // API Routes
-Route
-  .all('/api/*', Auth.APIrequiresUserLogin)
-  .post('/api/trick/create', API.tricks.create)
-  .post('/api/trick/delete/:trickId', API.tricks.delete)
-  .get('/api/trick', API.tricks.getAll)
-  .get('/api/trick/tricks-user', API.tricks.listTrickByUser)
-  .post('/api/trick/import', API.Uploader.import)
-  .get('/api/screenshoot', API.tricks.screenShootUrl)
-  .get('/api/user/current', API.Users.get_profile)
+// Route
+//   .all('/api/*', Auth.bearerToken)
+//   .all('/api/*', function(req, res, next) {
+//     res.header("Access-Control-Allow-Origi/", "*");
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     res.header("Access-Control-Allow-Headers", "Authorization");
+//     if(req.method === "OPTIONS") {
+//       res.statusCode = 204;
+//       return res.end();
+//     } else {
+//       return next();
+//     }
+//   })
+//   .all('/api/*', Auth.APIrequiresUserLogin)
+//   .get('/api/user/current', API.Users.get_profile)
+//   .get('/api/friends', API.Users.get_friends)
+//   .post('/login/facebookLogin', Auth.facebookLogin)
+//   .post('/login/googlePlusLogin', Auth.googlePlusLogin)
 
 // Frontend routes
 Route
@@ -41,46 +49,32 @@ Route
     passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: true
-  }), userController.session)
+    }), userController.session)
   .get('/auth/twitter', passport.authenticate('twitter'))
   .get('/auth/twitter/callback',
     passport.authenticate('twitter',{
     failureRedirect: '/login' }), function(req, res) {
     res.redirect(req.session.returnTo || '/');
   })
-  .get('/auth/facebook', function(req, res, next) {
-    console.log(req.query.parent_url);
-    var encodeBase64url = new Buffer(req.query.parent_url).toString('base64');
-    req.session = req.session || {};
-    req.session.returnTo = req.query.parent_url;
-    passport.authenticate('facebook', { 
-      callbackURL: '/auth/facebook/callback',
-      scope: ['email', 'user_location'] 
-    })(req, res, next);
+  .get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }))
+  .get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
+    res.redirect(req.session.returnTo || '/');
   })
-
-  .get('/auth/facebook/callback', function(req, res, next) {
-    passport.authenticate('facebook', { 
-      failureRedirect: '/login',
-      successRedirect: '/redirect'
-    })(req, res, next)
-  })
-
-  .get("/redirect", function(req, res, next) {
-    if(!req.session.returnTo) {
-      return res.render('404', { url: req.url, error: '404 Not found' });
-    }
-    res.redirect(req.session.returnTo);
-  })
-
-  .get('/trick/create', Auth.requiresLogin, trickController.create)
-  .get('/:username/tricks', Auth.requiresLogin, trickController.myTrick)
-  .get('/:username', userController.user_profile)
   .get('/', function(req, res) {
+    console.log('   >> Worker PID:', process.pid);
     res.render('index', {
       title: 'Express 4'
     });
   })
-  .param('trickId', API.tricks.load)
+  .get('/push', function(req, res) {
+    // NotificationController.sendNotificationToUserByEmail("lanna.blue89@gmail.com", "Lanna");
+    NotificationController.sendNotificationToUserByFacebookID("10206503896498323", "Challenge", {
+      gameID: '123123',
+      key: "abc"
+    });
+    res.render('index', {
+      title: 'Express 4'
+    });
+  })
 
-module.exports = Route
+module.exports = Route;

@@ -2,7 +2,10 @@ var mongoose         = require('mongoose')
 var LocalStrategy    = require('passport-local').Strategy
 var TwitterStrategy  = require('passport-twitter').Strategy
 var FacebookStrategy = require('passport-facebook').Strategy
-var User             = mongoose.model('User')
+var User             = require('../models/user');
+var AccessToken      = require('../oauth/models').OAuthAccessTokensModel;
+var BearerStrategy = require('passport-http-bearer').Strategy;
+var moment = require('moment');
 
 module.exports = function (app, passport) {
 
@@ -96,6 +99,45 @@ module.exports = function (app, passport) {
       })
     }
   }))
+
+  // Bearer
+  passport.use(new BearerStrategy(
+    function(accessToken, done) {
+
+      console.log("accessToken" + accessToken);
+
+      AccessToken.findOne({accessToken:accessToken}, function(err, token) {
+        console.log("token" + token);
+        if (err) { return done(err); }
+        if (!token) { return done(null, false); }
+
+        var now = moment().unix();
+        var creationDate = moment(token.createdAt).unix();
+
+        if(app.config.expiredTime) {
+          if( now - creationDate > app.config.expiredTime ) {
+            console.log('Token expired');
+            AccessToken.remove({ token: accessToken }, function (err) {
+              if (err) return done(err);
+            });
+            return done(new Error("Token expired"), false, { message: 'Token expired' });
+          }
+        }
+
+        var info = {scope: '*'}
+        User.findOne({
+          id: token.userId
+        })
+        .exec(function (err, user) {
+          User.findOne({
+            _id: token.userId
+          }, function(err, user) {
+            done(err,user,info)
+          });
+        });
+      });
+    }
+  ));
 
   /**
    * Sign in with Facebook.

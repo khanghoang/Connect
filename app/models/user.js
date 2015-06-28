@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema
 var CreateUpdatedAt = require('mongoose-timestamp');
 var crypto = require('crypto');
-var oAuthTypes = ['twitter', 'facebook', 'google'];
+var oAuthTypes = ['twitter', 'facebook', 'google', 'token facebook', 'token google plus'];
 /**
  * User Schema
  */
@@ -23,12 +23,14 @@ var UserSchema = new Schema({
     require: true,
     lowercase: true
   },
+  name: String,
   firstname: String,
   lastname: String,
   photo_profile: String,
   facebook: {},
   twitter: {},
   tokens: [],
+  facebookID: String,
   provider: {
     type: String,
     default: 'local'
@@ -40,8 +42,9 @@ var UserSchema = new Schema({
   salt: {
     type: String
   },
+  avatar: String,
   reset_password_token: String,
-  reset_password_expires: Date
+  reset_password_expires: Date,
 })
 
 UserSchema.plugin(CreateUpdatedAt)
