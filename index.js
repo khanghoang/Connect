@@ -9,6 +9,9 @@ var serveStatic = require('serve-static');
 
 var app = require('express')();
 
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 if(process.env.NODE_ENV === 'production') {
   app.enable('trust proxy');
   app.use(require('express-enforces-ssl')());
@@ -33,7 +36,8 @@ require('./app/config/express')(app, express, passport);
 
 // create a server instance
 // passing in express app as a request event handler
-app.listen(app.get('port'), function() {
+
+server.listen(app.get('port'), function() {
   console.log("\n✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
 });
 
