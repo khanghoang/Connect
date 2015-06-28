@@ -139,11 +139,11 @@ module.exports = function(grunt) {
     },
     nodemon: {
       dev: {
-        script: "server.js",
+        script: "index.js",
         options: {
           ignore: ["README.md", "node_modules/**", ".DS_Store", "public"],
           ext: "js",
-          watch: ["app", "public", "server.js", "Gruntfile.js", "package.json"],
+          watch: ["app", "public", "index.js", "Gruntfile.js", "package.json"],
           delayTime: 1,
           env: {
             PORT: process.env.PORT || 3001
