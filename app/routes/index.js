@@ -82,5 +82,6 @@ Route
 
   .post('/login/facebookLogin', Auth.facebookLogin)
   .post('/api/conversation/create', ConversationController.createConversationToUserWithToken)
+  .get('/api/conversation/list', ConversationController.getListConversation)
 
 module.exports = Route;

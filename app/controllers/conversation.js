@@ -23,7 +23,7 @@ var ConversationController = {
         return utils.responses(res, 400, {message: "Missing or target user id is not valid"});
     }
 
-    User.find(targetUserID)
+    User.findOne({_id: targetUserID})
     .exec(function(err, targetUser) {
 
       if(err) {
@@ -35,9 +35,8 @@ var ConversationController = {
       conversation.targetUser = targetUser._id;
 
       conversation.save(function(err, result) {
-        console.log(err);
         if(err) {
-          return utils.responses(res, 500, {message: "Missing or target user id is not valid"});
+          return utils.responses(res, 500, {message: "Something went wrong"});
         }
 
         return utils.responses(res, 200, result);
@@ -45,6 +44,20 @@ var ConversationController = {
 
     })
 
+  },
+
+  getListConversation: function (req, res, next) {
+    var userID = req.user._id;
+    Conversation.find({
+      createUser: userID
+    }).or({
+      targetUser: userID
+    }).exec(function(err, result) {
+        if(err) {
+          return utils.responses(res, 500, {message: "Something went wrong"});
+        }
+        return utils.responses(res, 200, result);
+    });
   }
 };
 
