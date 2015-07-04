@@ -72,5 +72,6 @@ io.on('connection', function (socket) {
   console.log("New connection", socket.id);
   socket.on('my other event', function (data) {
     console.log(data);
+    socket.broadcast.emit('my other event', data);
   });
 });
