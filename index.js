@@ -9,6 +9,8 @@ var serveStatic = require('serve-static');
 var Auth = require('./app/middleware/authorization');
 var User = require('./app/models/user');
 var Conversation = require('./app/models/conversation');
+var Message = require('./app/models/message');
+var PushNotificationController = require('./app/controllers/PushNotificationController');
 
 var app = require('express')();
 
@@ -71,6 +73,7 @@ io.on('connection', function (socket) {
   console.log("New connection", socket.id);
   // make user online
   var user = socket.user;
+
   User.update({_id: user._id},
               {
                 $set: {
@@ -93,26 +96,72 @@ io.on('connection', function (socket) {
   // join room
   socket.on('joinRoom', function(roomID){
     socket.room = roomID;
-    socket.join(roomID);
-    socket.emit('log', 'SERVER', 'you have connected to room1');
+
+    Conversation.findOne(socket.room)
+    .populate("createUser")
+    .populate("targetUser")
+    .exec(function (err, conversation) {
+
+      if(err || !conversation) {
+        socket.emit('log', 'SERVER', 'room doenst exsit');
+      }
+
+      // if user is not createUser or targetUser
+      // we deny it
+      if(conversation.createUser._id.equals(socket.user._id) ||
+         conversation.targetUser._id.equals(socket.user._id)
+        )
+      {
+        socket.join(roomID);
+        socket.emit('log', 'SERVER', 'you have connected to room');
+
+        Message.find({conversation: socket.roomID})
+        .populate("user")
+        .exec(function (err, messages) {
+          socket.emit('joinRoomSuccessfully', {messages: messages});
+        })
+
+      } else {
+        console.log("conversation", conversation);
+        console.log("socket user", socket.user);
+        socket.emit('log', 'SERVER', 'you dont have permissions to join this room');
+      }
+
+    });
   });
 
   socket.on('sendChat', function(data) {
-    console.log(data);
-    io.sockets.in(socket.room).emit('updateChat', socket.username, data);
+    var message = new Message();
+    message.content = data;
 
     Conversation.findOne(socket.room)
     .exec(function (err, conversation) {
 
+      message.conversation = conversation;
+      var plainObject = message.toObject();
+      plainObject.user = user;
+
+      message.save(function(err, m) {
+        if(err) {
+          return;
+        }
+
+        message.user = user;
+        io.sockets.in(socket.room).emit('updateChat', plainObject);
+      })
+
       if(!conversation.createUser.online) {
-        // push notificaiton
+        //TODO: push notificaiton
+        PushNotificationController.sendNotificationToUserByUserID(createUser._id, message.content);
       }
 
       if(!conversation.targetUser.online) {
-        // push notificaiton
+        //TODO: push notificaiton
+        PushNotificationController.sendNotificationToUserByUserID(targetUser._id, message.content);
       }
 
     });
+
 
   });
 
