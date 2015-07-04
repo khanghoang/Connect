@@ -11,6 +11,8 @@ var Auth = require(config.root + '/middleware/authorization');
 var userController = require(config.root + '/controllers/users');
 var NotificationController = require(config.root + '/controllers/PushNotificationController');
 var trickController = require(config.root + '/controllers/tricks');
+var ConversationModel = require(config.root + '/models/conversation');
+var ConversationController = require(config.root + '/controllers/conversation');
 
 var API = {}
 API.Users = require(config.root + '/controllers/API/users');
@@ -79,5 +81,6 @@ Route
   })
 
   .post('/login/facebookLogin', Auth.facebookLogin)
+  .post('/conversation/create', ConversationController.createConversationToUserWithToken)
 
 module.exports = Route;
