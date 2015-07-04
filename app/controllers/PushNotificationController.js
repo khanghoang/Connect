@@ -3,9 +3,9 @@ GLOBAL.PARSE = require('parse').Parse;
 var _ = require("lodash");
 
 exports.initialize = function() {
-  var PARSE_ID = process.env.PARSE_ID || "eV7G9eTUiTzBeAvnEl4SBPLpO238hmZCiqabLgwV";
-  var PARSE_KEY = process.env.PARSE_KEY || "QGGox3yxwBWLjzvDeCzYGqyHaxhqKtcEy6uG9oNy";
-  var PARSE_MASTER = process.env.PARSE_MASTER || "b0f7TIfgpi7aSxppf0hX1icXxiokDESduuFInsjF";
+  var PARSE_ID = process.env.PARSE_ID || "sDe87NsGCpLHg1yv2iAF7RKxYa1mXrN8oVqMhVUG";
+  var PARSE_KEY = process.env.PARSE_KEY || "vR61BMnNYyKTPGmDmVBa59a9GL9va4OQP6kRIm31";
+  var PARSE_MASTER = process.env.PARSE_MASTER || "w4llNaFGKxlh1hb6gjrJpARBmeMP5zS4htaoDBR2";
 
   PARSE.initialize(
     PARSE_ID, 
@@ -63,6 +63,26 @@ exports.sendNotificationToUserByEmail = function(email, message, embedObject) {
   data = _.assign(data, embedObject);
 
   query.equalTo("user_email", email);
+
+  push(query, data, function(success, error) {
+    if(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return;
+    }
+  });
+}
+
+exports.sendNotificationToUserByUserID = function(userID, message, embedObject) {
+  var query = new PARSE.Query(PARSE.Installation);
+  var data = {
+    "alert": message,
+    "badge": 1,
+    "sound": "default"
+  };
+
+  data = _.assign(data, embedObject);
+
+  query.equalTo("user_id", userID);
 
   push(query, data, function(success, error) {
     if(error) {
