@@ -146,7 +146,11 @@ io.on('connection', function (socket) {
         }
 
         message.user = user;
-        io.sockets.in(socket.room).emit('updateChat', plainObject);
+        Message.findOne(message._id)
+        .populate("createUser")
+        .exec(function(err, m) {
+          io.sockets.in(socket.room).emit('updateChat', m);
+        })
       })
 
       if(!conversation.createUser.online) {
