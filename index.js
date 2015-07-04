@@ -161,7 +161,7 @@ io.on('connection', function (socket) {
         }
 
         Message.findOne(message._id)
-        .populate("createUser")
+        .populate("user")
         .exec(function(err, mes) {
           io.sockets.in(socket.room).emit('updateChat', mes);
         })
