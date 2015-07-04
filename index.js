@@ -155,12 +155,12 @@ io.on('connection', function (socket) {
 
       if(!conversation.createUser.online) {
         //TODO: push notificaiton
-        PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id, message.content);
+        // PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id, message.content);
       }
 
       if(!conversation.targetUser.online) {
         //TODO: push notificaiton
-        PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id, message.content);
+        // PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id, message.content);
       }
 
     });
