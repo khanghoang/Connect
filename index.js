@@ -118,7 +118,8 @@ io.on('connection', function (socket) {
         Message.find({conversation: socket.roomID})
         .populate("user")
         .exec(function (err, messages) {
-          socket.emit('joinRoomSuccessfully', {messages: messages});
+          socket.emit('joinRoomSuccessfully', {_id: conversation._id,
+                      messages: messages});
         })
 
       } else {
@@ -150,12 +151,12 @@ io.on('connection', function (socket) {
 
       if(!conversation.createUser.online) {
         //TODO: push notificaiton
-        PushNotificationController.sendNotificationToUserByUserID(createUser._id, message.content);
+        PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id, message.content);
       }
 
       if(!conversation.targetUser.online) {
         //TODO: push notificaiton
-        PushNotificationController.sendNotificationToUserByUserID(targetUser._id, message.content);
+        PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id, message.content);
       }
 
     });
