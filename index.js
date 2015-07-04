@@ -11,6 +11,7 @@ var User = require('./app/models/user');
 var Conversation = require('./app/models/conversation');
 var Message = require('./app/models/message');
 var PushNotificationController = require('./app/controllers/PushNotificationController');
+var async = require('async');
 
 var app = require('express')();
 
