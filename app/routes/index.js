@@ -19,7 +19,6 @@ API.Users = require(config.root + '/controllers/API/users');
 
 // API Routes
 // Route
-//   .all('/api/*', Auth.bearerToken)
 //   .all('/api/*', function(req, res, next) {
 //     res.header("Access-Control-Allow-Origi/", "*");
 //     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -31,14 +30,15 @@ API.Users = require(config.root + '/controllers/API/users');
 //       return next();
 //     }
 //   })
-//   .all('/api/*', Auth.APIrequiresUserLogin)
-//   .get('/api/user/current', API.Users.get_profile)
+  // .all('/api/*', Auth.APIrequiresUserLogin)
+  // .get('/api/user/current', API.Users.get_profile)
 //   .get('/api/friends', API.Users.get_friends)
 //   .post('/login/facebookLogin', Auth.facebookLogin)
 //   .post('/login/googlePlusLogin', Auth.googlePlusLogin)
 
 // Frontend routes
 Route
+  .all('/api/*', Auth.bearerToken)
   .get('/login', userController.login)
   .get('/signup', userController.signup)
   .get('/logout', userController.logout)
@@ -81,6 +81,6 @@ Route
   })
 
   .post('/login/facebookLogin', Auth.facebookLogin)
-  .post('/conversation/create', ConversationController.createConversationToUserWithToken)
+  .post('/api/conversation/create', ConversationController.createConversationToUserWithToken)
 
 module.exports = Route;
