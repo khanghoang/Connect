@@ -23,6 +23,10 @@ var UserSchema = new Schema({
     require: true,
     lowercase: true
   },
+  online: {
+    type: Boolean,
+    default: false
+  },
   name: String,
   firstname: String,
   lastname: String,

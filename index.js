@@ -7,6 +7,7 @@ var passport = require('passport');
 var config   = require(__dirname + '/app/config/config');
 var serveStatic = require('serve-static');
 var Auth = require('./app/middleware/authorization');
+var User = require('./app/models/user');
 
 var app = require('express')();
 
@@ -59,20 +60,33 @@ io.use(function(socket, next) {
       next(new Error("not authorized"));
     }
 
+    socket.user = user;
     next();
   })
 });
 
 io.on('connection', function (socket) {
 
-  socket.on('disconnect', function(){
-    console.log(socket.id, "is disconnected");
-  });
-
   console.log("New connection", socket.id);
-  socket.on('my other event', function (data) {
-    console.log(data);
-    socket.broadcast.emit('my other event', data);
+  // make user online
+  var user = socket.user;
+  User.update({_id: user._id},
+              {
+                $set: {
+                  online: true
+                }
+              }).exec();
+
+  socket.on('disconnect', function(){
+    console.log(socket.request._query, "is disconnected");
+
+    // make user offline
+    User.update({_id: user._id},
+                {
+                  $set: {
+                    online: false
+                  }
+                }).exec();
   });
 
   // join room
