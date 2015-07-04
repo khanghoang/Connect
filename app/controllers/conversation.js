@@ -2,6 +2,7 @@
 var User = require('../models/user');
 var Conversation = require('../models/conversation');
 var utils = require('../helper/utils');
+var async = require('async');
 
 var ConversationController = {
   createConversationToUserWithToken: function (req, res, next) {
@@ -16,6 +17,23 @@ var ConversationController = {
   createConversationToUserAsAnonymous: function (req, res, next) {
     return utils.responses(res, 200, {message: "Chat with anomymous"});
   },
+
+  checkIfConversationExists: function (userA, userB, cb) {
+    Conversation.findOne({
+      $or:
+        [
+        {
+          createUser: userA,
+          targetUser: userB
+        },
+        {
+          createUser: userB,
+          targetUser: userA
+        }
+      ]
+    }).exec(cb);
+  },
+
   createConversationToUserAsUser: function (req, res, next) {
 
     var targetUserID = req.body.target_user_id;
@@ -23,26 +41,42 @@ var ConversationController = {
         return utils.responses(res, 400, {message: "Missing or target user id is not valid"});
     }
 
-    User.findOne({_id: targetUserID})
-    .exec(function(err, targetUser) {
+    async.series({
+      conversation: function(callback){
+        ConversationController.checkIfConversationExists(req.user._id, targetUserID, callback);
+      }
+    },
+    function(err, results){
 
-      if(err) {
-        return utils.responses(res, 400, {message: "Missing or target user id is not valid"});
+      console.log(results);
+
+      // conversation exists 
+      if(results.conversation) {
+          return utils.responses(res, 200, results.conversation);
       }
 
-      var conversation = new Conversation();
-      conversation.createUser = req.user._id;
-      conversation.targetUser = targetUser._id;
+      User.findOne({_id: targetUserID})
+      .exec(function(err, targetUser) {
 
-      conversation.save(function(err, result) {
         if(err) {
-          return utils.responses(res, 500, {message: "Something went wrong"});
+          return utils.responses(res, 400, {message: "Missing or target user id is not valid"});
         }
 
-        return utils.responses(res, 200, result);
-      })
+        var conversation = new Conversation();
+        conversation.createUser = req.user._id;
+        conversation.targetUser = targetUser._id;
 
-    })
+        conversation.save(function(err, result) {
+          if(err) {
+            return utils.responses(res, 500, {message: "Something went wrong"});
+          }
+
+          return utils.responses(res, 200, result);
+        })
+
+      })
+    });
+
 
   },
 
