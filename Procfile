@@ -1,1 +1,1 @@
-web: node index.js
+web: npm install serve-static --save && node index.js
