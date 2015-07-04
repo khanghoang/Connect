@@ -21,15 +21,14 @@ exports.followUserByUserID = function (req, res, next) {
 
         callback(err, followInfo)
       })
-      callback(null, 'one', 'two');
     }
-  ], function (err, exists) {
+  ], function (err, followInfo) {
     if(err) {
       return utils.responses(res, 500, {message: "Something went wrong"});
     }
 
     // if exists alr
-    if(exists) {
+    if(followInfo) {
         return utils.responses(res, 200, followInfo.toObject());
     }
 
@@ -53,6 +52,40 @@ exports.followUserByUserID = function (req, res, next) {
       });
 
     })
+  });
+}
+
+exports.unfollowUserByUserID = function (req, res, next) {
+  var targetUserID = req.body.user_id;
+
+  if(!targetUserID) {
+    return utils.responses(res, 400, {message: "Missing or target user id is not valid"});
+  }
+
+  async.waterfall([
+    function(callback) {
+      FollowInfo.findOne({
+        follower: req.user._id,
+        followee: user_id
+      }).exec(function(err, followInfo) {
+
+        callback(err, followInfo)
+      })
+    }
+  ], function (err, followInfo) {
+    if(err) {
+      return utils.responses(res, 500, {message: "Something went wrong"});
+    }
+
+    // if exists alr
+    if(followInfo) {
+      FollowInfo.remove(followInfo).exec(function(err, result) {
+        return utils.responses(res, 200, {message: "success"});
+      });
+    } else {
+      return utils.responses(res, 400, {message: "User hasn't followed that guy before"});
+    }
+
   });
 
 

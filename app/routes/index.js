@@ -39,5 +39,6 @@ Route
   .get('/api/conversation/list', ConversationController.getListConversation)
 
   .post('/api/user/follow', FollowController.followUserByUserID)
+  .post('/api/user/unfollow', FollowController.followUserByUserID)
 
 module.exports = Route;
