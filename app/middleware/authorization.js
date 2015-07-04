@@ -3,6 +3,8 @@ var superagent = require('superagent');
 var User = require('../models/user');
 var async = require('async');
 var crypto = require('crypto');
+var AccessToken = require('../oauth/models').OAuthAccessTokensModel;
+var moment = require('moment');
 
 /*
  *  Generic require login routing middleware
@@ -145,6 +147,39 @@ exports.googlePlusLogin = function (req, res, next) {
   });
 
 };
+
+exports.checkAuthToken = function (app, accessToken, done) {
+  AccessToken.findOne({accessToken:accessToken}, function(err, token) {
+    console.log("token" + token);
+    if (err) { return done(err); }
+    if (!token) { return done(null, false); }
+
+    var now = moment().unix();
+    var creationDate = moment(token.createdAt).unix();
+
+    if(app.config.expiredTime) {
+      if( now - creationDate > app.config.expiredTime ) {
+        console.log('Token expired');
+        AccessToken.remove({ token: accessToken }, function (err) {
+          if (err) return done(err);
+        });
+        return done(new Error("Token expired"), false, { message: 'Token expired' });
+      }
+    }
+
+    var info = {scope: '*'}
+    User.findOne({
+      id: token.userId
+    })
+    .exec(function (err, user) {
+      User.findOne({
+        _id: token.userId
+      }, function(err, user) {
+        done(err,user,info)
+      });
+    });
+  });
+}
 
 // TODO: refactor
 exports.facebookLogin = function (req, res, next) {

@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var config   = require(__dirname + '/app/config/config');
 var serveStatic = require('serve-static');
+var Auth = require('./app/middleware/authorization');
 
 var app = require('express')();
 
@@ -47,13 +48,28 @@ server.listen(app.get('port'), function() {
   console.log("\n✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
 });
 
+io.use(function(socket, next) {
+  if(!socket.request._query) {
+      return next(new Error("not authorized"));
+  }
+
+  var token = socket.request._query.token;
+  Auth.checkAuthToken(app, token, function(err, user) {
+    if (err || !user) {
+      next(new Error("not authorized"));
+    }
+
+    next();
+  })
+});
+
 io.on('connection', function (socket) {
 
   socket.on('disconnect', function(){
-    console.log(socket, "is disconnected");
+    console.log(socket.id, "is disconnected");
   });
 
-  console.log("New connection", socket);
+  console.log("New connection", socket.id);
   socket.on('my other event', function (data) {
     console.log(data);
   });
