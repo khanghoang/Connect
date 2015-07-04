@@ -13,30 +13,11 @@ var NotificationController = require(config.root + '/controllers/PushNotificatio
 var trickController = require(config.root + '/controllers/tricks');
 var ConversationModel = require(config.root + '/models/conversation');
 var ConversationController = require(config.root + '/controllers/conversation');
+var FollowController = require(config.root + '/controllers/FollowController');
 
 var API = {}
 API.Users = require(config.root + '/controllers/API/users');
 
-// API Routes
-// Route
-//   .all('/api/*', function(req, res, next) {
-//     res.header("Access-Control-Allow-Origi/", "*");
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//     res.header("Access-Control-Allow-Headers", "Authorization");
-//     if(req.method === "OPTIONS") {
-//       res.statusCode = 204;
-//       return res.end();
-//     } else {
-//       return next();
-//     }
-//   })
-  // .all('/api/*', Auth.APIrequiresUserLogin)
-  // .get('/api/user/current', API.Users.get_profile)
-//   .get('/api/friends', API.Users.get_friends)
-//   .post('/login/facebookLogin', Auth.facebookLogin)
-//   .post('/login/googlePlusLogin', Auth.googlePlusLogin)
-
-// Frontend routes
 Route
   .all('/api/*', Auth.bearerToken)
   .get('/login', userController.login)
@@ -53,35 +34,10 @@ Route
     failureRedirect: '/login',
     failureFlash: true
     }), userController.session)
-  .get('/auth/twitter', passport.authenticate('twitter'))
-  .get('/auth/twitter/callback',
-    passport.authenticate('twitter',{
-    failureRedirect: '/login' }), function(req, res) {
-    res.redirect(req.session.returnTo || '/');
-  })
-  .get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }))
-  .get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
-    res.redirect(req.session.returnTo || '/');
-  })
-  .get('/', function(req, res) {
-    console.log('   >> Worker PID:', process.pid);
-    res.render('index', {
-      title: 'Express 4'
-    });
-  })
-  .get('/push', function(req, res) {
-    // NotificationController.sendNotificationToUserByEmail("lanna.blue89@gmail.com", "Lanna");
-    NotificationController.sendNotificationToUserByFacebookID("10206503896498323", "Challenge", {
-      gameID: '123123',
-      key: "abc"
-    });
-    res.render('index', {
-      title: 'Express 4'
-    });
-  })
-
   .post('/login/facebookLogin', Auth.facebookLogin)
   .post('/api/conversation/create', ConversationController.createConversationToUserWithToken)
   .get('/api/conversation/list', ConversationController.getListConversation)
+
+  .post('/api/user/follow', FollowController.followUserByUserID)
 
 module.exports = Route;
