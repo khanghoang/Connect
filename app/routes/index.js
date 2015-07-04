@@ -7,6 +7,7 @@ var Auth = require(config.root + '/middleware/authorization');
 var fs = require('fs');
 var utils = require(config.root + '/helper/utils');
 
+var Auth = require(config.root + '/middleware/authorization');
 var userController = require(config.root + '/controllers/users');
 var NotificationController = require(config.root + '/controllers/PushNotificationController');
 var trickController = require(config.root + '/controllers/tricks');
@@ -76,5 +77,7 @@ Route
       title: 'Express 4'
     });
   })
+
+  .post('/login/facebookLogin', Auth.facebookLogin)
 
 module.exports = Route;
