@@ -47,6 +47,7 @@
     "lodash": "^2.4.1",
     "lusca": "^1.0.2",
     "method-override": "^2.3.1",
+    "minimist": "^1.1.1",
     "mkdirp": "^0.5.0",
     "moment": "https://registry.npmjs.org/moment/-/moment-2.9.0.tgz",
     "mongoose": "3.8.21",
