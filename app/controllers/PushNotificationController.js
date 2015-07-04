@@ -72,7 +72,7 @@ exports.sendNotificationToUserByEmail = function(email, message, embedObject) {
   });
 }
 
-exports.sendNotificationToUserByUserID = function(userID, message, embedObject) {
+function sendNotificationToUserByUserID(userID, message, embedObject) {
   var query = new PARSE.Query(PARSE.Installation);
   var data = {
     "alert": message,
@@ -90,6 +90,27 @@ exports.sendNotificationToUserByUserID = function(userID, message, embedObject) 
       return;
     }
   });
+}
+
+exports.sendNotificationToUserByUserID = sendNotificationToUserByUserID;
+
+exports.boardcastMessageByUser = function(userID, message, embedObject) {
+  var query = new PARSE.Query(PARSE.Installation);
+  var data = {
+    "alert": message,
+    "badge": 1,
+    "sound": "default"
+  };
+
+  data = _.assign(data, embedObject);
+
+  FollowInfo.find({
+    followee: userID
+  }).exec(function(err, users) {
+    _.each(users, function(user) {
+      sendNotificationToUserByUserID(userID, message);
+    })
+  })
 }
 
 exports.sendPushNotificationToAllDevices = function(message, embedObject) {
