@@ -145,7 +145,7 @@ io.on('connection', function (socket) {
         .exec(callback);
       }
     },
-    function(err, results) {
+    function(err, result) {
       if(err) {
         // TODO: handle error;
         return;
