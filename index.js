@@ -74,4 +74,17 @@ io.on('connection', function (socket) {
     console.log(data);
     socket.broadcast.emit('my other event', data);
   });
+
+  // join room
+  socket.on('joinRoom', function(roomID){
+    socket.room = roomID;
+    socket.join(roomID);
+    socket.emit('log', 'SERVER', 'you have connected to room1');
+  });
+
+  socket.on('sendChat', function(data) {
+    console.log(data);
+    io.sockets.in(socket.room).emit('updateChat', socket.username, data);
+  });
+
 });
