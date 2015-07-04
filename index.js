@@ -8,6 +8,7 @@ var config   = require(__dirname + '/app/config/config');
 var serveStatic = require('serve-static');
 var Auth = require('./app/middleware/authorization');
 var User = require('./app/models/user');
+var Conversation = require('./app/models/conversation');
 
 var app = require('express')();
 
@@ -99,6 +100,20 @@ io.on('connection', function (socket) {
   socket.on('sendChat', function(data) {
     console.log(data);
     io.sockets.in(socket.room).emit('updateChat', socket.username, data);
+
+    Conversation.findOne(socket.room)
+    .exec(function (err, conversation) {
+
+      if(!conversation.createUser.online) {
+        // push notificaiton
+      }
+
+      if(!conversation.targetUser.online) {
+        // push notificaiton
+      }
+
+    });
+
   });
 
 });
