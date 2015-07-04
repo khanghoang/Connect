@@ -9,6 +9,12 @@ var serveStatic = require('serve-static');
 
 var app = require('express')();
 
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  next();
+});
+
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
