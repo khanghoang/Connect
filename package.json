@@ -79,10 +79,8 @@
     "utility": "^1.2.1",
     "validator": "3.27.0",
     "view-helpers": "^0.1.5",
-    "winston": "https://registry.npmjs.org/winston/-/winston-0.8.3.tgz"
-  },
-  "devDependencies": {
-    "chai": "^1.10.0",
+    "winston": "https://registry.npmjs.org/winston/-/winston-0.8.3.tgz",
+    "chai": "lastet",
     "grunt": "latest",
     "grunt-cli": "latest",
     "grunt-concurrent": "latest",
@@ -101,6 +99,8 @@
     "mocha": "^2.1.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"
+  },
+  "devDependencies": {
   },
   "engines": {
     "node": "0.10.36",
