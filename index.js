@@ -116,7 +116,7 @@ io.on('connection', function (socket) {
         socket.join(roomID);
         socket.emit('log', 'SERVER', 'you have connected to room');
 
-        Message.find({conversation: socket.roomID})
+        Message.find({conversation: roomID})
         .populate("user")
         .exec(function (err, messages) {
           socket.emit('joinRoomSuccessfully', {_id: conversation._id,
