@@ -31,7 +31,10 @@ var ConversationController = {
           targetUser: userA
         }
       ]
-    }).exec(cb);
+    })
+    .populate("createUser")
+    .populate("targetUser")
+    .exec(cb);
   },
 
   createConversationToUserAsUser: function (req, res, next) {
@@ -83,10 +86,18 @@ var ConversationController = {
   getListConversation: function (req, res, next) {
     var userID = req.user._id;
     Conversation.find({
-      createUser: userID
-    }).or({
-      targetUser: userID
-    }).exec(function(err, result) {
+      $or: [
+        {
+          createUser: userID
+        },
+        {
+          targetUser: userID
+        }
+      ]
+    })
+    .populate("createUser")
+    .populate("targetUser")
+    .exec(function(err, result) {
         if(err) {
           return utils.responses(res, 500, {message: "Something went wrong"});
         }
