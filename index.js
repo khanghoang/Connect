@@ -122,8 +122,6 @@ io.on('connection', function (socket) {
         })
 
       } else {
-        console.log("conversation", conversation);
-        console.log("socket user", socket.user);
         socket.emit('log', 'SERVER', 'you dont have permissions to join this room');
       }
 
