@@ -31,8 +31,8 @@ var ConversationController = {
       }
 
       var conversation = new Conversation();
-      conversation.createUser = req.user;
-      conversation.targetUser = targetUser;
+      conversation.createUser = req.user._id;
+      conversation.targetUser = targetUser._id;
 
       conversation.save(function(err, result) {
         console.log(err);
