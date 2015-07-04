@@ -151,7 +151,9 @@ io.on('connection', function (socket) {
         return;
       }
 
-      message.conversation = result.conversation;
+      var conversation = result.conversation;
+
+      message.conversation =conversation;
       message.user = result.user;
 
       Message.findOne(message._id)
@@ -160,15 +162,15 @@ io.on('connection', function (socket) {
         io.sockets.in(socket.room).emit('updateChat', mes);
       })
 
-      if(!conversation.createUser.online) {
+      // if(!conversation.createUser.online) {
         //TODO: push notificaiton
         // PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id, message.content);
-      }
+      // }
 
-      if(!conversation.targetUser.online) {
+      // if(!conversation.targetUser.online) {
         //TODO: push notificaiton
         // PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id, message.content);
-      }
+      // }
     });
 
 
