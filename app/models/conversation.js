@@ -11,6 +11,15 @@ var Conversation = new Schema({
     ref : 'User'
   },
 
+  targetUser: {
+    type : Schema.ObjectId,
+    ref : 'User'
+  },
+
+  messages: {
+    type: Array
+  }
+
 });
 
 Conversation.plugin(CreateUpdatedAt);
