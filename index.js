@@ -153,14 +153,20 @@ io.on('connection', function (socket) {
 
       var conversation = result.conversation;
 
-      message.conversation =conversation;
+      message.conversation = conversation;
       message.user = result.user;
+      message.save(function(err, m) {
+        if (err) {
+          return;
+        }
 
-      Message.findOne(message._id)
-      .populate("createUser")
-      .exec(function(err, mes) {
-        io.sockets.in(socket.room).emit('updateChat', mes);
-      })
+        Message.findOne(message._id)
+        .populate("createUser")
+        .exec(function(err, mes) {
+          io.sockets.in(socket.room).emit('updateChat', mes);
+        })
+
+      });
 
       // if(!conversation.createUser.online) {
         //TODO: push notificaiton
