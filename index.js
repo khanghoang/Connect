@@ -132,25 +132,31 @@ io.on('connection', function (socket) {
   socket.on('sendChat', function(data) {
     var message = new Message();
     message.content = data;
+    message.user = user;
 
-    Conversation.findOne(socket.room)
-    .exec(function (err, conversation) {
+    async.parallel({
+      user: function(callback){
+        User.findOne(user._id)
+        .exec(callback)
+      },
+      conversation: function(callback){
+        Conversation.findOne(socket.room)
+        .exec(callback);
+      }
+    },
+    function(err, results) {
+      if(err) {
+        // TODO: handle error;
+        return;
+      }
 
-      message.conversation = conversation;
-      var plainObject = message.toObject();
-      plainObject.user = user;
+      message.conversation = result.conversation;
+      message.user = result.user;
 
-      message.save(function(err, m) {
-        if(err) {
-          return;
-        }
-
-        message.user = user;
-        Message.findOne(message._id)
-        .populate("createUser")
-        .exec(function(err, m) {
-          io.sockets.in(socket.room).emit('updateChat', m);
-        })
+      Message.findOne(message._id)
+      .populate("createUser")
+      .exec(function(err, mes) {
+        io.sockets.in(socket.room).emit('updateChat', mes);
       })
 
       if(!conversation.createUser.online) {
@@ -162,7 +168,6 @@ io.on('connection', function (socket) {
         //TODO: push notificaiton
         // PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id, message.content);
       }
-
     });
 
 
