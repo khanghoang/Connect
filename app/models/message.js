@@ -12,18 +12,14 @@ var Message = new Schema({
     ref: "User"
   },
 
+  conversation: {
+    type: Schema.ObjectId,
+    ref: "Conversation"
+  },
+
   content: {
     type: String
   },
-
-  targetUser: {
-    type : Schema.ObjectId,
-    ref : 'User'
-  },
-
-  messages: {
-    type: Array
-  }
 
 });
 
