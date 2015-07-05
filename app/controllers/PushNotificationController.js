@@ -4,7 +4,7 @@ var _ = require("lodash");
 
 exports.initialize = function() {
   var PARSE_ID = process.env.PARSE_ID || "sDe87NsGCpLHg1yv2iAF7RKxYa1mXrN8oVqMhVUG";
-  var PARSE_KEY = process.env.PARSE_KEY || "vR61BMnNYyKTPGmDmVBa59a9GL9va4OQP6kRIm31";
+  var PARSE_KEY = process.env.PARSE_KEY || "MA0Lo82rbjsS9WiDC7tlnKA8nEEQ6Yoaoe7aUKIt";
   var PARSE_MASTER = process.env.PARSE_MASTER || "w4llNaFGKxlh1hb6gjrJpARBmeMP5zS4htaoDBR2";
 
   PARSE.initialize(
