@@ -16,7 +16,7 @@ exports.followUserByUserID = function (req, res, next) {
     function(callback) {
       FollowInfo.findOne({
         follower: req.user._id,
-        followee: user_id
+        followee: targetUserID
       }).exec(function(err, followInfo) {
 
         callback(err, followInfo)
@@ -66,7 +66,7 @@ exports.unfollowUserByUserID = function (req, res, next) {
     function(callback) {
       FollowInfo.findOne({
         follower: req.user._id,
-        followee: user_id
+        followee: targetUserID
       }).exec(function(err, followInfo) {
 
         callback(err, followInfo)
