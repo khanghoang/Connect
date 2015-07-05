@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:paddingRight="50dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <com.shonnect.shonnect.control.AspectRatioImageView
+        android:id="@+id/iv_chat_avatar"
+        android:layout_width="@dimen/chat_avatar_dimen"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        app:aspectRatio="1" />
+
+    <TextView
+        android:id="@+id/tv_chat_message"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_chat_bgr"/>
+</LinearLayout>

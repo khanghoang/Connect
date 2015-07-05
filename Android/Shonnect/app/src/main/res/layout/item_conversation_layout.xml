@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <com.shonnect.shonnect.control.AspectRatioImageView
+        android:id="@+id/iv_conversation_avatar"
+        android:layout_width="@dimen/circle_avatar_width"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        app:aspectRatio="1" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_conversation_name"
+                android:layout_marginRight="10dp"
+                android:textSize="13sp"
+                android:textColor="@android:color/black"
+                android:lines="1"
+                android:text="akjsdasdjasd"
+                android:maxLines="1"
+                android:ellipsize="none" />
+
+            <TextView
+                android:id="@+id/tv_conversation_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_conversation_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:lines="1"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.shonnect.shonnect.control.AspectRatioImageView
+        android:id="@+id/iv_shop_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:aspectRatio="baseOnWidth" />
+
+    <TextView
+        android:id="@+id/tv_shop_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/text_gradient"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="15dp"
+        android:layout_gravity="bottom"
+        android:paddingBottom="25dp" />
+</FrameLayout>
