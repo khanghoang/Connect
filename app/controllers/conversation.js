@@ -98,11 +98,6 @@ var ConversationController = {
     })
     .populate("createUser")
     .populate("targetUser")
-    // .populate("messages")
-    // .populate({
-    //   path: "messages",
-    //   options: {sort: {createAt: -1}, limit: 1}
-    // })
     .exec(function(err, result) {
         if(err) {
           return utils.responses(res, 500, {message: "Something went wrong"});
@@ -117,12 +112,11 @@ var ConversationController = {
         async.series(result.map(function(item) {
           return function(callback) {
 
-            Message.find({conversation: item._id})
+            Message.findOne({conversation: item._id})
             .populate("user")
             .sort({
               createdAt: -1
             })
-            .limit(1)
             .exec(callback)
           }
         }), function(err, results) {
