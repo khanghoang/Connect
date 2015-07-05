@@ -172,13 +172,19 @@ io.on('connection', function (socket) {
 
       if(!conversation.createUser.online) {
         //TODO: push notificaiton
-        PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id, message.content);
+        PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id.toString(), message.user.name + ": " + message.content, {
+          conversation_id: conversation._id,
+          user_id: message.user._id,
+        });
         console.log("push notification to user " + conversation.createUser._id);
       }
 
       if(!conversation.targetUser.online) {
         //TODO: push notificaiton
-        PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id, message.content);
+        PushNotificationController.sendNotificationToUserByUserID(conversation.targetUser._id.toString(), message.user.name + ": " + message.content, {
+          conversation_id: conversation._id,
+          user_id: message.user._id,
+        });
         console.log("push notification to user " + conversation.targerUser._id);
       }
     });
