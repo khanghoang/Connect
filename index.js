@@ -171,6 +171,8 @@ io.on('connection', function (socket) {
 
       });
 
+      console.log(conversation);
+
       if(!conversation.createUser.online) {
         //TODO: push notificaiton
         PushNotificationController.sendNotificationToUserByUserID(conversation.createUser._id.toString(), user.name + ": " + message.content, {
@@ -186,7 +188,7 @@ io.on('connection', function (socket) {
           conversation_id: conversation._id,
           user_id: user._id,
         });
-        console.log("push notification to user " + conversation.targerUser._id);
+        console.log("push notification to user " + conversation.targetUser._id);
       }
     });
 
