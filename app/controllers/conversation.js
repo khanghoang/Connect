@@ -4,6 +4,8 @@ var Conversation = require('../models/conversation');
 var Message = require('../models/message');
 var utils = require('../helper/utils');
 var async = require('async');
+var FollowInfo = require("../models/followInfo");
+var ObjectID = require('mongodb').ObjectID;
 
 var ConversationController = {
   createConversationToUserWithToken: function (req, res, next) {
@@ -48,6 +50,13 @@ var ConversationController = {
     async.series({
       conversation: function(callback){
         ConversationController.checkIfConversationExists(req.user._id, targetUserID, callback);
+      },
+
+      isFollowed: function(callback) {
+        FollowInfo.findOne({
+          follower: req.user._id,
+          followee: ObjectID(targetUserID)
+        }).exec(callback)
       }
     },
     function(err, results){
@@ -56,7 +65,9 @@ var ConversationController = {
 
       // conversation exists 
       if(results.conversation) {
-          return utils.responses(res, 200, results.conversation);
+        var plainConversation = results.conversation.toObject();
+        plainConversation.isFollowed = results.isFollowed ? true : false;
+        return utils.responses(res, 200, plainConversation);
       }
 
       User.findOne({_id: targetUserID})
@@ -70,12 +81,14 @@ var ConversationController = {
         conversation.createUser = req.user._id;
         conversation.targetUser = targetUser._id;
 
-        conversation.save(function(err, result) {
+        conversation.save(function(err, r) {
           if(err) {
             return utils.responses(res, 500, {message: "Something went wrong"});
           }
 
-          return utils.responses(res, 200, result);
+          var plainConversation = r.toObject();
+          plainConversation.isFollowed = results.isFollowed ? true : false;
+          return utils.responses(res, 200, plainConversation);
         })
 
       })
