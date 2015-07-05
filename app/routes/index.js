@@ -43,6 +43,24 @@ Route
     res.redirect(req.session.returnTo || '/');
   })
 
+  .get('/', function(req, res) {
+    res.render('index', {
+      _csrf: res.locals._csrf,
+      title: 'Express 4'
+    });
+  })
+
+  .get('/boardcast', Auth.requiresLogin, function(req, res) {
+    res.render('boardcast', {
+      _csrf: res.locals._csrf,
+      title: 'Boardcast'
+    });
+  })
+
+  .post('/boardcast', function() {
+
+  })
+
   .post('/api/user/follow', FollowController.followUserByUserID)
   .post('/api/user/unfollow', FollowController.followUserByUserID)
 
