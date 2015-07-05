@@ -1,0 +1,15 @@
+.header-container {
+    color: white;
+}
+
+.logo {
+    background: url('../../images/logo.png') no-repeat center center;
+    background-size: 100%;
+
+    position: absolute;
+    top: 5px;
+    left: 20px;
+
+    width: (104px/1.5);
+    height: (100px/1.5);
+}

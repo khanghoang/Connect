@@ -1,0 +1,14 @@
+{
+    "preset": "airbnb",
+    "esprima": "esprima-fb",
+    "requireSpaceAfterKeywords": [
+        "switch",
+        "case",
+        "return",
+        "typeof"
+    ],
+    "validateIndentation": 4,
+    "requireSpaceBeforeBlockStatements": null,
+    "disallowMultipleVarDecl": null
+}
+

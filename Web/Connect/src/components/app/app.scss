@@ -1,0 +1,24 @@
+@import "../../styles/config.scss";
+@import "_bootstrap.scss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+#app-connect .wrapper {
+    width: 300px!important;
+    // height: 400px;
+    color: #333;
+    background: white;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    border: 1px solid #ccc;
+    z-index: 999;
+}

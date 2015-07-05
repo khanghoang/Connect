@@ -1,0 +1,3 @@
+--errors=
+--warnings=
+--ignore=box-model,adjoining-classes,box-sizing,text-indent,regex-selectors,universal-selector,overqualified-elements,shorthand,floats,font-sizes,ids,outline-none

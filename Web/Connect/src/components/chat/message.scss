@@ -1,0 +1,30 @@
+.message-container {
+    padding: 20px 20px;
+    position: relative;
+
+    &.isOwner {
+        text-align: right;
+    }
+}
+
+.message-container + .message-container {
+    border-top: 1px solid #ccc;
+}
+
+.avatar-container {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.message {
+    padding-left: 50px;
+}
