@@ -68,6 +68,6 @@ Route
   })
 
   .post('/api/user/follow', FollowController.followUserByUserID)
-  .post('/api/user/unfollow', FollowController.followUserByUserID)
+  .post('/api/user/unfollow', FollowController.unfollowUserByUserID)
 
 module.exports = Route;

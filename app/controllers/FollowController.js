@@ -79,7 +79,10 @@ exports.unfollowUserByUserID = function (req, res, next) {
 
     // if exists alr
     if(followInfo) {
-      FollowInfo.remove(followInfo).exec(function(err, result) {
+      FollowInfo.remove({
+        follower: req.user._id,
+        followee: targetUserID
+      }).exec(function(err, result) {
         return utils.responses(res, 200, {message: "success"});
       });
     } else {
