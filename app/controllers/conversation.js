@@ -1,6 +1,7 @@
 'user strict';
 var User = require('../models/user');
 var Conversation = require('../models/conversation');
+var Message = require('../models/message');
 var utils = require('../helper/utils');
 var async = require('async');
 
@@ -97,11 +98,43 @@ var ConversationController = {
     })
     .populate("createUser")
     .populate("targetUser")
+    // .populate("messages")
+    // .populate({
+    //   path: "messages",
+    //   options: {sort: {createAt: -1}, limit: 1}
+    // })
     .exec(function(err, result) {
         if(err) {
           return utils.responses(res, 500, {message: "Something went wrong"});
         }
-        return utils.responses(res, 200, result);
+
+        var returnArray = result.map(function(item) {
+          var plainObject = item.toObject();
+
+          return plainObject;
+        });
+
+        async.series(result.map(function(item) {
+          return function(callback) {
+
+            Message.find({conversation: item._id})
+            .populate("user")
+            .sort({
+              createdAt: -1
+            })
+            .limit(1)
+            .exec(callback)
+          }
+        }), function(err, results) {
+          var finalResult = returnArray.map(function(item, index) {
+            item.lastMessage = results[index];
+            return item;
+          });
+
+          return utils.responses(res, 200, finalResult);
+
+        });
+
     });
   }
 };
