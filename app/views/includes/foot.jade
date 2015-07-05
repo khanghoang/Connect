@@ -19,22 +19,6 @@ if NODE_ENV == 'production'
     var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-22117109-15']); _gaq.push(['_trackPageview']);(function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();
 
 script(type='text/javascript').
-  function getParentUrl() {
-    var isInIframe = (parent !== window),
-      parentUrl = null;
-
-    if (isInIframe) {
-      parentUrl = document.referrer;
-    }
-
-    return parentUrl;
-  }
-  $(document).ready(function() {
-    var link = getParentUrl();
-    console.log(link);
-    var $facebookLoginButton = $(".btn-facebook");
-    $facebookLoginButton.attr("href", $facebookLoginButton.attr("href")+link);
-  });
 
   var port = 3001;
 
