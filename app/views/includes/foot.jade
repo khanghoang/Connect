@@ -34,11 +34,4 @@ if NODE_ENV == 'production'
       port = 443;
   if NODE_ENV == 'production'
 
-script(type='text/javascript').
-  var socket = io.connect('http://localhost' + ':' + port, {
-      query: "token=2bdb792b3ce72781081d8fb8188f07b7822fae92"
-    });
-  socket.on('updateChat', function (username, data) {
-    console.log(username, data);
-  });
 
