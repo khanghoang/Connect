@@ -55,10 +55,16 @@ Route
       _csrf: res.locals._csrf,
       title: 'Boardcast'
     });
+
+    console.log("request user", req.user);
   })
 
-  .post('/boardcast', function() {
-
+  .post('/boardcast', function(req, res, next) {
+    console.log("debug");
+    console.log("message = ", req.body.message);
+    NotificationController.boardcastMessageByUser(req.user._id.toString(), req.body.message);
+    req.flash('success', { msg: 'Send successfully' });
+    res.redirect("/boardcast");
   })
 
   .post('/api/user/follow', FollowController.followUserByUserID)
