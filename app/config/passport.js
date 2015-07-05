@@ -151,7 +151,7 @@ module.exports = function (app, passport) {
           , { email: profile.email }] }
           , function(err, existingUser) {
         if (existingUser) {
-          req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
+          req.flash('errors', { ms: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
           done(err)
         } else {
           User.findById(req.user.id, function(err, user) {
@@ -179,8 +179,8 @@ module.exports = function (app, passport) {
 
         User.findOne({ email: profile._json.email }, function(err, existingEmailUser) {
           if (existingEmailUser) {
-            req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' })
-            done(err)
+            // req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' })
+            done(null, existingEmailUser)
           } else {
             var user = new User()
             user.email         = profile._json.email
