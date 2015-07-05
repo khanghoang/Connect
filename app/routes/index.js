@@ -38,6 +38,11 @@ Route
   .post('/api/conversation/create', ConversationController.createConversationToUserWithToken)
   .get('/api/conversation/list', ConversationController.getListConversation)
 
+  .get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }))
+  .get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
+    res.redirect(req.session.returnTo || '/');
+  })
+
   .post('/api/user/follow', FollowController.followUserByUserID)
   .post('/api/user/unfollow', FollowController.followUserByUserID)
 
