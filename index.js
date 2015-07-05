@@ -142,6 +142,8 @@ io.on('connection', function (socket) {
       },
       conversation: function(callback){
         Conversation.findOne(socket.room)
+        .populate("createUser")
+        .populate("targetUser")
         .exec(callback);
       }
     },
