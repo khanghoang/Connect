@@ -1,6 +1,8 @@
 'use stricts'
 GLOBAL.PARSE = require('parse').Parse;
 var _ = require("lodash");
+var async = require('async');
+var FollowInfo = require("../models/followInfo");
 
 exports.initialize = function() {
   var PARSE_ID = process.env.PARSE_ID || "sDe87NsGCpLHg1yv2iAF7RKxYa1mXrN8oVqMhVUG";
@@ -106,9 +108,11 @@ exports.boardcastMessageByUser = function(userID, message, embedObject) {
 
   FollowInfo.find({
     followee: userID
-  }).exec(function(err, users) {
-    _.each(users, function(user) {
-      sendNotificationToUserByUserID(userID, message);
+  })
+  .populate("follower")
+  .exec(function(err, infos) {
+    _.each(infos, function(info) {
+      sendNotificationToUserByUserID(info.follower._id.toString(), message);
     })
   })
 }
