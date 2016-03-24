@@ -2,8 +2,8 @@
 
 module.exports = function (ROOT_PATH) {
   var config = {
-    AWS_KEY: "AKIAIE6SUIZCTS3DO4PA",
-    AWS_SECRET: "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",
+    AWS_KEY: "xxxx",
+    AWS_SECRET: "xxxx",
     expiredTime: false,
     server: {
       port: 3001,
